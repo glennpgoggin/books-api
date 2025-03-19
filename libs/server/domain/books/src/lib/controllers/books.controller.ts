@@ -6,26 +6,41 @@ import {
   Param,
   Body,
   Put,
+  Query,
 } from '@nestjs/common';
 import { BooksService } from '../services/books.service';
 import { CreateBookDto } from '../dto/create-book.dto';
 import { UpdateBookDto } from '../dto/update-book.dto';
-import { ApiResponse, apiResponse, Book } from '@shared/support/interfaces';
+import {
+  ApiResponse,
+  apiResponse,
+  Book,
+  PaginatedResponse,
+  paginatedApiResponse,
+} from '@shared/support/interfaces';
 import { AuthorRoleDto } from '../dto/create-author.dto';
+import { ListBooksQueryDto } from '../dto/list-books-query.dto';
 
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
-  async findAll(): Promise<ApiResponse<Book[]>> {
-    const books = await this.booksService.findAll();
-    return apiResponse(books);
+  async list(
+    @Query() query: ListBooksQueryDto
+  ): Promise<ApiResponse<PaginatedResponse<Book>>> {
+    const books = await this.booksService.list(query);
+    return paginatedApiResponse<Book>(
+      books.items,
+      books.total,
+      books.nextCursor,
+      books.limit
+    );
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<ApiResponse<Book>> {
-    const book = await this.booksService.findById(id);
+  async getById(@Param('id') id: string): Promise<ApiResponse<Book>> {
+    const book = await this.booksService.getById(id);
     return apiResponse(book);
   }
 

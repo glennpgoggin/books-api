@@ -7,7 +7,7 @@ import {
   IsDateString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { BookStatus } from '@shared/support/interfaces';
+import { BookFormat, BookGenre, BookStatus } from '@shared/support/interfaces';
 import { AuthorRoleDto } from './create-author.dto';
 
 export class CreateBookDto {
@@ -27,12 +27,12 @@ export class CreateBookDto {
   edition?: string;
 
   @IsOptional()
-  @IsString()
-  format?: string;
+  @IsEnum(BookGenre)
+  genre?: BookGenre;
 
   @IsOptional()
-  @IsString()
-  genre?: string;
+  @IsEnum(BookFormat)
+  format?: BookFormat;
 
   @IsOptional()
   @IsString()
