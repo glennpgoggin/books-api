@@ -17,14 +17,14 @@ export class AuthorsController {
   constructor(private readonly authorsService: AuthorsService) {}
 
   @Get()
-  async findAll(): Promise<ApiResponse<Author[]>> {
-    const authors = await this.authorsService.findAll();
+  async list(): Promise<ApiResponse<Author[]>> {
+    const authors = await this.authorsService.list();
     return apiResponse(authors);
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<ApiResponse<Author>> {
-    const author = await this.authorsService.findById(id);
+  async getById(@Param('id') id: string): Promise<ApiResponse<Author>> {
+    const author = await this.authorsService.getById(id);
     return apiResponse(author);
   }
 

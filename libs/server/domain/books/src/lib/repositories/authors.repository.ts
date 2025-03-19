@@ -8,11 +8,11 @@ import { UpdateAuthorDto } from '../dto/update-author.dto';
 export class AuthorsRepository {
   constructor(public readonly db: DatabaseService) {}
 
-  async findAll(): Promise<AuthorEntity[]> {
+  async list(): Promise<AuthorEntity[]> {
     return this.db.author.findMany();
   }
 
-  async findById(id: string): Promise<AuthorEntity | null> {
+  async getById(id: string): Promise<AuthorEntity | null> {
     return this.db.author.findUnique({
       where: { id },
     });

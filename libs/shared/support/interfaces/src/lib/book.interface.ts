@@ -23,13 +23,30 @@ export interface BookAuthor {
 }
 
 export enum BookStatus {
-  Draft = 'DRAFT',
-  Published = 'PUBLISHED',
-  Archived = 'ARCHIVED',
+  Draft = 'draft',
+  Published = 'published',
+  Archived = 'archived',
 }
 
 export enum BookAuthorRole {
-  Author = 'Author',
-  Editor = 'Editor',
-  Contributor = 'Contributor',
+  Author = 'author',
+  Editor = 'editor',
+  Contributor = 'contributor',
+}
+
+export enum BookFormat {
+  Hardcover = 'hardcover',
+  Paperback = 'paperback',
+  Ebook = 'ebook',
+  Audiobook = 'audiobook',
+}
+
+export enum BookGenre {
+  Fiction = 'fiction',
+  NonFiction = 'non_fiction',
+  Fantasy = 'fantasy',
+  Science = 'science',
+  Biography = 'biography',
+  History = 'history',
+  Other = 'other',
 }

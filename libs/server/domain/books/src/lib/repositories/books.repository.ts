@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '@server/support/database';
 import { CreateBookDto } from '../dto/create-book.dto';
-import { BookStatus } from '@shared/support/interfaces';
+import { BookStatus, PaginatedResponse } from '@shared/support/interfaces';
 import { BookEntity } from '../entities/book.entity';
 import { UpdateBookDto } from '../dto/update-book.dto';
+import { ListBooksQueryDto } from '../dto/list-books-query.dto';
 
 @Injectable()
 export class BooksRepository {
@@ -12,19 +13,47 @@ export class BooksRepository {
   };
   constructor(public readonly db: DatabaseService) {}
 
-  async findAll(): Promise<BookEntity[]> {
-    return this.db.book.findMany({
+  async list(
+    query: ListBooksQueryDto = {} as ListBooksQueryDto
+  ): Promise<PaginatedResponse<BookEntity>> {
+    const { authorId, format, genre, status, sortBy, sortOrder, take, cursor } =
+      query;
+
+    const whereClause = {
+      ...(authorId && { authors: { some: { authorId: authorId } } }),
+      ...(format && { format: { equals: format } }),
+      ...(genre && { genre: { equals: genre } }),
+      ...(status && { status: { equals: status } }),
+    };
+
+    const items = await this.db.book.findMany({
+      where: whereClause,
+      orderBy: { [sortBy]: sortOrder },
+      skip: cursor ? 1 : 0,
+      ...(cursor && { cursor: { id: cursor } }),
+      take,
       include: this.includeRelations,
     });
+
+    const total = await this.db.book.count({ where: whereClause });
+
+    const nextCursor = items.length > 1 ? items[items.length - 1].id : null;
+
+    return {
+      items,
+      total,
+      limit: take,
+      nextCursor,
+    };
   }
 
-  async findAllIncludingDeleted(): Promise<BookEntity[]> {
+  async listIncludingDeleted(): Promise<BookEntity[]> {
     return await (this.db.book as any).findManyIncludingDeleted({
       include: this.includeRelations,
     });
   }
 
-  async findById(id: string): Promise<BookEntity | null> {
+  async getById(id: string): Promise<BookEntity | null> {
     return this.db.book.findUnique({
       where: { id },
       include: this.includeRelations,

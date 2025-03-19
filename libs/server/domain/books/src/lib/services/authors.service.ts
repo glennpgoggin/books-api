@@ -9,13 +9,13 @@ import { Author } from '@shared/support/interfaces';
 export class AuthorsService {
   constructor(private readonly authorsRepository: AuthorsRepository) {}
 
-  async findAll(): Promise<Author[]> {
-    const authors = await this.authorsRepository.findAll();
+  async list(): Promise<Author[]> {
+    const authors = await this.authorsRepository.list();
     return authors.map(mapAuthorEntityToResponse);
   }
 
-  async findById(id: string): Promise<Author> {
-    const author = await this.authorsRepository.findById(id);
+  async getById(id: string): Promise<Author> {
+    const author = await this.authorsRepository.getById(id);
     if (!author) throw new NotFoundException('Author not found');
     return mapAuthorEntityToResponse(author);
   }
@@ -31,7 +31,7 @@ export class AuthorsService {
   }
 
   async delete(id: string): Promise<void> {
-    const author = await this.authorsRepository.findById(id);
+    const author = await this.authorsRepository.getById(id);
     if (!author) {
       throw new NotFoundException(`Author with ID ${id} not found.`);
     }

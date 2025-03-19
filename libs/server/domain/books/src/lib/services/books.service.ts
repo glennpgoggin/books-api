@@ -7,21 +7,25 @@ import { BooksRepository } from '../repositories/books.repository';
 import { CreateBookDto } from '../dto/create-book.dto';
 import { UpdateBookDto } from '../dto/update-book.dto';
 import { mapBookEntityToResponse } from '../mappers/book.mapper';
-import { Book } from '@shared/support/interfaces';
+import { Book, PaginatedResponse } from '@shared/support/interfaces';
 import slugify from 'slugify';
 import { generateUniqueSlug } from '@server/support/database';
+import { ListBooksQueryDto } from '../dto/list-books-query.dto';
 
 @Injectable()
 export class BooksService {
   constructor(private readonly booksRepository: BooksRepository) {}
 
-  async findAll(): Promise<Book[]> {
-    const books = await this.booksRepository.findAll();
-    return books.map(mapBookEntityToResponse);
+  async list(query: ListBooksQueryDto): Promise<PaginatedResponse<Book>> {
+    const result = await this.booksRepository.list(query);
+    return {
+      ...result,
+      items: result.items.map(mapBookEntityToResponse),
+    };
   }
 
-  async findById(id: string): Promise<Book> {
-    const book = await this.booksRepository.findById(id);
+  async getById(id: string): Promise<Book> {
+    const book = await this.booksRepository.getById(id);
     if (!book) throw new NotFoundException('Book not found');
     return mapBookEntityToResponse(book);
   }
@@ -55,7 +59,7 @@ export class BooksService {
   }
 
   async softDelete(id: string): Promise<void> {
-    const book = await this.booksRepository.findById(id);
+    const book = await this.booksRepository.getById(id);
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found.`);
     }
@@ -67,7 +71,7 @@ export class BooksService {
   }
 
   async delete(id: string): Promise<void> {
-    const book = await this.booksRepository.findById(id);
+    const book = await this.booksRepository.getById(id);
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found.`);
     }
@@ -76,7 +80,7 @@ export class BooksService {
   }
 
   async restore(id: string): Promise<Book> {
-    const book = await this.booksRepository.findById(id);
+    const book = await this.booksRepository.getById(id);
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found.`);
     }
@@ -93,7 +97,7 @@ export class BooksService {
     authorId: string,
     role: string
   ): Promise<Book> {
-    const book = await this.booksRepository.findById(bookId);
+    const book = await this.booksRepository.getById(bookId);
     if (!book) throw new NotFoundException('Book not found.');
 
     // TODO
@@ -102,13 +106,13 @@ export class BooksService {
 
     await this.booksRepository.addAuthorToBook(bookId, authorId, role);
 
-    const updatedBook = await this.booksRepository.findById(bookId);
+    const updatedBook = await this.booksRepository.getById(bookId);
     return mapBookEntityToResponse(updatedBook!);
   }
 
   async removeAuthor(bookId: string, authorId: string): Promise<Book> {
     await this.booksRepository.removeAuthorFromBook(bookId, authorId);
-    const updatedBook = await this.booksRepository.findById(bookId);
+    const updatedBook = await this.booksRepository.getById(bookId);
     return mapBookEntityToResponse(updatedBook!);
   }
 }

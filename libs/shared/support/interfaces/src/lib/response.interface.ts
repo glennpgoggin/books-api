@@ -8,8 +8,8 @@ export interface ApiResponse<D, M = string, Meta = unknown> {
 export interface PaginatedResponse<T> {
   items: T[];
   total: number;
-  page: number;
   limit: number;
+  nextCursor?: string | null | undefined;
 }
 
 export type PaginatedApiResponse<D> = ApiResponse<PaginatedResponse<D>>;
@@ -30,25 +30,12 @@ export function apiResponse<D, M = string, Meta = unknown>(
   };
 }
 
-export function paginatedResponse<T>(
-  items: T[],
-  total: number,
-  page: number,
-  limit: number
-): PaginatedResponse<T> {
-  return { items, total, page, limit };
-}
-
 export function paginatedApiResponse<T>(
   items: T[],
   total: number,
-  page: number,
+  nextCursor: string | null | undefined,
   limit: number,
-  message = 'Success'
+  message = ''
 ): PaginatedApiResponse<T> {
-  return apiResponse(
-    paginatedResponse(items, total, page, limit),
-    200,
-    message
-  );
+  return apiResponse({ items, total, nextCursor, limit }, 200, message);
 }
