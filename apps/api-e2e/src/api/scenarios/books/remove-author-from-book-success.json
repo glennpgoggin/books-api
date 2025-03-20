@@ -1,0 +1,15 @@
+{
+  "name": "Remove author from existing book",
+  "description": "Removes an author from a book that was previously added.",
+  "dependencies": ["./add-author-to-book-success.json"],
+  "request": {
+    "method": "DELETE",
+    "endpoint": "/books/{{./create-book-success.response.data.id}}/authors/{{../authors/create-author-success.response.data.id}}"
+  },
+  "expected": {
+    "status": 200,
+    "partialBodyMatch": {
+      "message": "Author removed successfully"
+    }
+  }
+}

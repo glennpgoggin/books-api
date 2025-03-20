@@ -2,11 +2,15 @@
   "name": "@nestjs/source",
   "version": "0.0.0",
   "license": "MIT",
+  "prisma": {
+    "seed": "ts-node libs/server/support/database/prisma/seeds/index.ts"
+  },
   "scripts": {
     "db:generate": "prisma generate --schema=libs/server/support/database/prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema=libs/server/support/database/prisma/schema.prisma",
     "db:migrate:reset": "prisma migrate reset --schema=libs/server/support/database/prisma/schema.prisma",
-    "db:studio": "prisma studio --schema=libs/server/support/database/prisma/schema.prisma"
+    "db:studio": "prisma studio --schema=libs/server/support/database/prisma/schema.prisma",
+    "db:seed": "npx prisma db seed"
   },
   "private": true,
   "dependencies": {
@@ -24,6 +28,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.6.0",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.2",
     "@nx-tools/container-metadata": "^5.0.2",
@@ -44,10 +49,12 @@
     "eslint-config-prettier": "8.1.0",
     "jest": "^29.4.1",
     "jest-environment-node": "^29.4.1",
+    "jsonpath-plus": "^10.3.0",
     "nx": "16.6.0",
     "nx-cloud": "latest",
     "prettier": "^2.6.2",
     "prisma": "^6.5.0",
+    "supertest": "^7.0.0",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "typescript": "~5.1.3"

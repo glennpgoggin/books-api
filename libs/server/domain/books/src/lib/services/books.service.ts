@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -11,10 +12,14 @@ import { Book, PaginatedResponse } from '@shared/support/interfaces';
 import slugify from 'slugify';
 import { generateUniqueSlug } from '@server/support/database';
 import { ListBooksQueryDto } from '../dto/list-books-query.dto';
+import { AuthorsRepository } from '../repositories/authors.repository';
 
 @Injectable()
 export class BooksService {
-  constructor(private readonly booksRepository: BooksRepository) {}
+  constructor(
+    private readonly booksRepository: BooksRepository,
+    private readonly authorsRepository: AuthorsRepository
+  ) {}
 
   async list(query: ListBooksQueryDto): Promise<PaginatedResponse<Book>> {
     const result = await this.booksRepository.list(query);
@@ -39,6 +44,25 @@ export class BooksService {
       if (existingIsbn) {
         throw new ConflictException(
           `A book with ISBN ${dto.isbn} already exists.`
+        );
+      }
+    }
+
+    const authorIds = dto.authors?.map((a) => a.authorId) ?? [];
+    if (authorIds.length > 0) {
+      const existingAuthors = await this.authorsRepository.findByIds({
+        ids: authorIds,
+      });
+      const existingAuthorIds = existingAuthors.map((a) => a.id);
+      const missingAuthorIds = authorIds.filter(
+        (id) => !existingAuthorIds.includes(id)
+      );
+
+      if (missingAuthorIds.length > 0) {
+        throw new BadRequestException(
+          `The following author IDs do not exist: ${missingAuthorIds.join(
+            ', '
+          )}`
         );
       }
     }

@@ -1,0 +1,11 @@
+{
+  "name": "Create book success",
+  "request": {
+    "method": "POST",
+    "endpoint": "/books",
+    "body": {
+      "title": "The Hobbit"
+    }
+  },
+  "expected": { "status": 201 }
+}

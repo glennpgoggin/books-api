@@ -1,0 +1,12 @@
+{
+  "name": "Soft delete book successfully",
+  "description": "Tests that a book can be soft deleted and is no longer returned in list endpoints.",
+  "dependencies": ["./create-book-success.json"],
+  "request": {
+    "method": "DELETE",
+    "endpoint": "/books/{{./create-book-success.response.data.id}}"
+  },
+  "expected": {
+    "status": 200
+  }
+}

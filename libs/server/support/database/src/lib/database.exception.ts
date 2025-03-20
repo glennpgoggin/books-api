@@ -15,7 +15,7 @@ export class DatabaseException extends Error {
   }
 
   getResponse() {
-    return apiResponse(null, this.statusCode, this.message, undefined, false, {
+    return apiResponse(null, this.statusCode, this.message, undefined, {
       type: 'DatabaseError',
       detail: this.message,
       ...(this.context && { context: this.context }),

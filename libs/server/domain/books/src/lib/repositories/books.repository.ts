@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '@server/support/database';
 import { CreateBookDto } from '../dto/create-book.dto';
 import { BookStatus, PaginatedResponse } from '@shared/support/interfaces';
@@ -99,27 +99,30 @@ export class BooksRepository {
   async update(id: string, dto: UpdateBookDto): Promise<BookEntity> {
     const existingBook = await this.db.book.findUnique({ where: { id } });
 
+    if (!existingBook) {
+      throw new NotFoundException(`Book with ID ${id} not found.`);
+    }
+
     const shouldSetPublishedDate =
       dto.status === BookStatus.Published &&
       existingBook?.status !== BookStatus.Published &&
       !dto.publishedDate;
 
-    return this.db.book.update({
-      where: { id },
-      data: {
-        title: dto.title,
-        isbn: dto.isbn,
+    const data = {
+      ...dto,
+      ...{
         publishedDate: dto.publishedDate
           ? new Date(dto.publishedDate)
           : shouldSetPublishedDate
           ? new Date()
           : existingBook?.publishedDate,
-        edition: dto.edition,
-        format: dto.format,
-        genre: dto.genre,
-        description: dto.description,
         status: dto.status ?? BookStatus.Draft,
       },
+    };
+
+    return this.db.book.update({
+      where: { id },
+      data,
       include: this.includeRelations,
     });
   }

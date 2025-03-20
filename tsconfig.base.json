@@ -14,6 +14,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "paths": {
       "@server/domain/books": ["libs/server/domain/books/src/index.ts"],
       "@server/support/database": ["libs/server/support/database/src/index.ts"],

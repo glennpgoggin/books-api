@@ -1,0 +1,18 @@
+{
+  "name": "Fail to update book with invalid status enum",
+  "description": "Tests that sending an invalid status enum triggers validation errors.",
+  "dependencies": ["./create-book-success.json"],
+  "request": {
+    "method": "PUT",
+    "endpoint": "/books/{{./create-book-success.response.data.id}}",
+    "body": {
+      "status": "NotARealStatus"
+    }
+  },
+  "expected": {
+    "status": 400,
+    "partialBodyMatch": {
+      "message": ["status must be one of the following values:"]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Create author successfully",
+  "description": "Creates a new author that can be used for books in dependent scenarios.",
+  "request": {
+    "method": "POST",
+    "endpoint": "/authors",
+    "body": {
+      "name": "J.R.R. Tolkien",
+      "bio": "John Ronald Reuel Tolkien was an English writer and professor, best known for The Hobbit and The Lord of the Rings."
+    }
+  },
+  "expected": {
+    "status": 201,
+    "partialBodyMatch": {
+      "data.name": "J.R.R. Tolkien",
+      "data.bio": "John Ronald Reuel Tolkien was an English writer and professor, best known for The Hobbit and The Lord of the Rings."
+    }
+  }
+}
