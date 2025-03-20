@@ -3,6 +3,7 @@ import { BooksModule } from '@server/domain/books';
 import { DatabaseModule, DatabaseService } from '@server/support/database';
 import { createTestApp, ScenarioRunner } from '../support/index';
 import * as path from 'path';
+import { CacheModule } from '@nestjs/cache-manager';
 
 describe('BooksController (e2e)', () => {
   let app: INestApplication;
@@ -10,7 +11,11 @@ describe('BooksController (e2e)', () => {
   let runner: ScenarioRunner;
 
   beforeAll(async () => {
-    app = await createTestApp([DatabaseModule, BooksModule]);
+    app = await createTestApp([
+      DatabaseModule,
+      BooksModule,
+      CacheModule.register({ isGlobal: true }),
+    ]);
     db = app.get(DatabaseService);
     runner = new ScenarioRunner(app);
   });
