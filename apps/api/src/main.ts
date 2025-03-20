@@ -5,6 +5,7 @@
 
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
 
@@ -19,6 +20,9 @@ async function bootstrap() {
       transform: true,
     })
   );
+  app.enableCors();
+  app.use(helmet());
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
   Logger.log(

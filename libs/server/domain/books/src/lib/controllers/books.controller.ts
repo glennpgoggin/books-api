@@ -7,6 +7,7 @@ import {
   Body,
   Put,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { BooksService } from '../services/books.service';
 import { CreateBookDto } from '../dto/create-book.dto';
@@ -20,12 +21,14 @@ import {
 } from '@shared/support/interfaces';
 import { AuthorRoleDto } from '../dto/create-author.dto';
 import { ListBooksQueryDto } from '../dto/list-books-query.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   async list(
     @Query() query: ListBooksQueryDto
   ): Promise<ApiResponse<PaginatedResponse<Book>>> {
