@@ -1,0 +1,22 @@
+{
+  "name": "Fail to create book without title",
+  "description": "This scenario verifies that the API returns a validation error when trying to create a book without a title.",
+  "request": {
+    "method": "POST",
+    "endpoint": "/books",
+    "body": {
+      "isbn": "978-0547928227",
+      "edition": "1st Edition",
+      "format": "hardcover",
+      "genre": "fantasy",
+      "description": "A fantasy adventure in Middle-earth.",
+      "status": "published"
+    }
+  },
+  "expected": {
+    "status": 400,
+    "partialBodyMatch": {
+      "message": ["title should not be empty", "title must be a string"]
+    }
+  }
+}

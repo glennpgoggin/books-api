@@ -5,6 +5,8 @@ import {
   IsArray,
   ValidateNested,
   IsDateString,
+  IsNotEmpty,
+  MaxLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { BookFormat, BookGenre, BookStatus } from '@shared/support/interfaces';
@@ -12,10 +14,13 @@ import { AuthorRoleDto } from './create-author.dto';
 
 export class CreateBookDto {
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
   title!: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(20)
   isbn?: string;
 
   @IsOptional()
@@ -24,6 +29,7 @@ export class CreateBookDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(50)
   edition?: string;
 
   @IsOptional()
@@ -36,6 +42,7 @@ export class CreateBookDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(1000)
   description?: string;
 
   @IsOptional()

@@ -1,0 +1,32 @@
+{
+  "name": "Create book with existing author",
+  "description": "Creates a book and associates it with an author created in a dependency scenario.",
+  "dependencies": ["../authors/create-author-success.json"],
+  "request": {
+    "method": "POST",
+    "endpoint": "/books",
+    "body": {
+      "title": "The Hobbit",
+      "isbn": "978-0547928227",
+      "edition": "1st Edition",
+      "format": "hardcover",
+      "genre": "fantasy",
+      "description": "A fantasy adventure in Middle-earth.",
+      "status": "published",
+      "authors": [
+        {
+          "authorId": "{{../authors/create-author-success.response.data.id}}",
+          "role": "author"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "status": 201,
+    "partialBodyMatch": {
+      "data.title": "The Hobbit",
+      "data.authors[0].author.name": "J.R.R. Tolkien",
+      "data.status": "published"
+    }
+  }
+}

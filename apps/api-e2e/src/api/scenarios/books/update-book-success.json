@@ -1,0 +1,20 @@
+{
+  "name": "Update book core info successfully",
+  "description": "Updates the title and description of an existing book without modifying authors.",
+  "dependencies": ["./create-book-success.json"],
+  "request": {
+    "method": "PUT",
+    "endpoint": "/books/{{./create-book-success.response.data.id}}",
+    "body": {
+      "title": "The Hobbit: Updated Edition",
+      "description": "An updated description for the classic adventure."
+    }
+  },
+  "expected": {
+    "status": 200,
+    "partialBodyMatch": {
+      "title": "The Hobbit: Updated Edition",
+      "description": "An updated description for the classic adventure."
+    }
+  }
+}

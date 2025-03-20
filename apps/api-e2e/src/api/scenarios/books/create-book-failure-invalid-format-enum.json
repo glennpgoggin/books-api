@@ -1,0 +1,19 @@
+{
+  "name": "Fail to create book with invalid format enum",
+  "description": "Tests that sending an invalid book format enum triggers validation errors.",
+  "request": {
+    "method": "POST",
+    "endpoint": "/books",
+    "body": {
+      "title": "Invalid Format Enum Test Book",
+      "isbn": "978-INVALID-FORMAT",
+      "format": "Paperstone"
+    }
+  },
+  "expected": {
+    "status": 400,
+    "partialBodyMatch": {
+      "message": ["format must be one of the following values"]
+    }
+  }
+}

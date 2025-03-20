@@ -3,6 +3,7 @@ import { DatabaseService } from '@server/support/database';
 import { CreateAuthorDto } from '../dto/create-author.dto';
 import { AuthorEntity } from '../entities/author.entity';
 import { UpdateAuthorDto } from '../dto/update-author.dto';
+import { FindAuthorsQueryDto } from '../dto/find-authors-query.dto';
 
 @Injectable()
 export class AuthorsRepository {
@@ -10,6 +11,12 @@ export class AuthorsRepository {
 
   async list(): Promise<AuthorEntity[]> {
     return this.db.author.findMany();
+  }
+
+  async findByIds(dto: FindAuthorsQueryDto): Promise<AuthorEntity[]> {
+    return this.db.author.findMany({
+      where: { id: { in: dto.ids } },
+    });
   }
 
   async getById(id: string): Promise<AuthorEntity | null> {

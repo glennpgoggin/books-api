@@ -1,0 +1,22 @@
+{
+  "name": "Add author to existing book",
+  "description": "Adds an additional author to a book.",
+  "dependencies": [
+    "./create-book-success.json",
+    "../authors/create-author-success.json"
+  ],
+  "request": {
+    "method": "POST",
+    "endpoint": "/books/{{./create-book-success.response.data.id}}/authors",
+    "body": {
+      "authorId": "{{../authors/create-author-success.response.data.id}}",
+      "role": "contributor"
+    }
+  },
+  "expected": {
+    "status": 201,
+    "partialBodyMatch": {
+      "data.authors[?(@.role=='contributor')].author.name": ["J.R.R. Tolkien"]
+    }
+  }
+}

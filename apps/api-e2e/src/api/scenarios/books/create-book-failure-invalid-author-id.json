@@ -1,0 +1,25 @@
+{
+  "name": "Fail to create book with invalid authorId",
+  "description": "Tests that creating a book with a non-existent authorId returns a foreign key or integrity error.",
+  "request": {
+    "method": "POST",
+    "endpoint": "/books",
+    "body": {
+      "title": "Invalid Author Test Book",
+      "isbn": "12345-invalid-author",
+      "status": "published",
+      "authors": [
+        {
+          "authorId": "non-existent-id-123",
+          "role": "author"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "status": 400,
+    "partialBodyMatch": {
+      "message": "The following author IDs do not exist: non-existent-id-123"
+    }
+  }
+}
